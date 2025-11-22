@@ -31,9 +31,7 @@ class MyProjectActivity : ProjectActivity {
             MyDaemonListener(project)
         )
 
-        val connection2 = project.messageBus.connect()
-
-        connection2.subscribe(
+        connection.subscribe(
             ExecutionManager.EXECUTION_TOPIC,
             MyExecutionListener(project)
         )
