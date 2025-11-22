@@ -12,4 +12,9 @@
         <toolWindow factoryClass="org.jetbrains.plugins.template.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
         <postStartupActivity implementation="org.jetbrains.plugins.template.startup.MyProjectActivity" />
     </extensions>
+    <projectListeners>
+        <listener
+                class="org.jetbrains.plugins.template.MyDaemonListener"
+                topic="com.intellij.codeInsight.daemon.DaemonCodeAnalyzer.DAEMON_EVENT_TOPIC"/>
+    </projectListeners>
 </idea-plugin>
