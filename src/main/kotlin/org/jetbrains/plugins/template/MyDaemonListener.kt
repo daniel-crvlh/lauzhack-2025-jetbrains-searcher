@@ -1,17 +1,21 @@
 package org.jetbrains.plugins.template
 
+import ai.grazie.utils.json.JSONObject
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl
 import com.intellij.codeInsight.daemon.impl.HighlightInfo
 import com.intellij.codeInsight.hint.HintManager
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiFile
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.DaemonListener {
 
@@ -50,8 +54,35 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
 
                 errors.forEach { error ->
                     if (!entries.contains(error)) {
-                        println("🔥 SYNTAX ERROR: ${error.description}")
-                        showEditorHint(editor.editor, "Syntax Error: ${error.description}")
+
+                        ApplicationManager.getApplication().executeOnPooledThread {
+                            try {
+                                val url = URL("https://dogapi.dog/api/v2/facts?limit=1")
+                                val conn = url.openConnection() as HttpURLConnection
+                                conn.requestMethod = "GET"
+                                conn.connectTimeout = 3000
+                                conn.readTimeout = 3000
+
+                                val response = conn.inputStream.bufferedReader().readText()
+
+                                val responseObj = Json.decodeFromString<ApiResponse.ApiResponse>(response)
+
+                                val fact = responseObj.data
+
+                                // Show popup in UI thread
+                                ApplicationManager.getApplication().invokeLater {
+                                    showEditorHint(
+                                        editor.editor,
+                                        "🐶 Fun fact: $fact"
+                                    )
+                                }
+
+                            } catch (e: Exception) {
+                                println("❌ Failed to fetch dog fact: ${e.message}")
+                            }
+                        }
+
+                        println("🔥 SYNTAX ERROR AND LOADING HELP...")
                     }
                 }
 
