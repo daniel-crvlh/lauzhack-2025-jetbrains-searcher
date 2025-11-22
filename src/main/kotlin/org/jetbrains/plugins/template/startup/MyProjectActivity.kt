@@ -1,16 +1,21 @@
 package org.jetbrains.plugins.template.startup
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
+import com.intellij.execution.ExecutionListener
+import com.intellij.execution.ExecutionManager
 import com.intellij.execution.ProgramRunnerUtil
 import com.intellij.execution.RunManager
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.process.ProcessAdapter
 import com.intellij.execution.process.ProcessEvent
+import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import org.jetbrains.plugins.template.MyDaemonListener
+import org.jetbrains.plugins.template.MyExecutionListener
+import org.jetbrains.plugins.template.MyProcessListener
 import kotlin.coroutines.ContinuationInterceptor
 import kotlin.coroutines.CoroutineContext
 
@@ -26,11 +31,11 @@ class MyProjectActivity : ProjectActivity {
             MyDaemonListener(project)
         )
 
-        val runManager = RunManager.getInstance(project)
-        val settings = runManager.selectedConfiguration ?: return
-        val executor = DefaultRunExecutor.getRunExecutorInstance()
+        val connection2 = project.messageBus.connect()
 
-        // This executes the configuration
-        ProgramRunnerUtil.executeConfiguration(settings, executor)
+        connection2.subscribe(
+            ExecutionManager.EXECUTION_TOPIC,
+            MyExecutionListener(project)
+        )
     }
 }

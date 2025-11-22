@@ -17,4 +17,10 @@
                 class="org.jetbrains.plugins.template.MyDaemonListener"
                 topic="com.intellij.codeInsight.daemon.DaemonCodeAnalyzer.DAEMON_EVENT_TOPIC"/>
     </projectListeners>
+    <applicationListeners>
+        <!-- Startup: register listeners -->
+        <listener
+                class="org.jetbrains.plugins.template.startup.MyStartupActivity"
+                topic="com.intellij.openapi.startup.ProjectActivity"/>
+    </applicationListeners>
 </idea-plugin>
