@@ -12,6 +12,8 @@ import com.intellij.psi.PsiFile
 
 class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.DaemonListener {
 
+    val entries: MutableList<String> = mutableListOf()
+
     override fun daemonFinished(fileEditors: Collection<FileEditor>) {
         handleEditors(fileEditors)
     }
@@ -38,10 +40,18 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
                 .filter { it.severity.myName == "ERROR" }
 
             if (errors.isNotEmpty()) {
-                println("🔥 Errors found in ${psiFile.name} (${errors.size})")
 
-                errors.forEach {
-                    println(" - ${it.description}")
+                errors.forEach { error ->
+                    if (entries.isNotEmpty()) {
+                        val lastElem = entries.last()
+                        if (error.description != lastElem) {
+                            entries.add(error.description)
+                            println("🔥 SYNTAX ERROR: ${error.description}")
+                        }
+                    } else {
+                        entries.add(error.description)
+                        println("🔥 SYNTAX ERROR: ${error.description}")
+                    }
                 }
             }
         }
