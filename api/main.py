@@ -38,7 +38,7 @@ def predictPost(req: PredictRequest):
     )
     explanationRes = client.chat.completions.create(
     model="openai/gpt-oss-20b",
-    messages=[{"role":"system", "content":f"You're an expert in {req.language} given the {req.function} error and {req.language} code, explain why the following solution is the best"},{"role": "user", "content": f"code:{req.code},  error:{req.error}, solution:{completion.choices[0].message.content}"}],
+    messages=[{"role":"system", "content":f"You're an expert in {req.language} given the {req.function} error and {req.language} code, explain why the following solution is the best, try to explain shortly, you can extend if necessary"},{"role": "user", "content": f"code:{req.code},  error:{req.error}, solution:{completion.choices[0].message.content}"}],
     )
 
     return {"code": completion.choices[0].message.content, "explanation": explanationRes.choices[0].message.content, "shortDescription": shortDescriptionRes.choices[0].message.content}
