@@ -55,8 +55,6 @@ class MyProcessListener : ProcessAdapter() {
                     }
                     """.trimIndent()
 
-                    MyPanelFactory.textArea?.append("$jsonToSend\n\n")
-
                     ApplicationManager.getApplication().executeOnPooledThread {
                         try {
                             val url = URL("http://127.0.0.1:8000/predict")
