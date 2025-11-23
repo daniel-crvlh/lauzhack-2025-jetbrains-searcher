@@ -74,7 +74,7 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
                                         "\"code\": \"\",\n" +
                                         "\"lineNb\":12,\n" +
                                         "\"function\":\"syntax\",\n" +
-                                        "\"language\":\"kotlin\"\n" +
+                                        "\"language\":\"java\"\n" +
                                         "}"
 
                                 // Write body
