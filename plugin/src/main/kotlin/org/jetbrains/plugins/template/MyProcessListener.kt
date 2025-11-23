@@ -27,6 +27,7 @@ class MyProcessListener : ProcessAdapter() {
         val regex = Regex("at [\\w\\d]+\\.([\\w\\d]+)\\(([\\w\\d]+\\.[\\w\\d]+):(\\d+)\\)")
         val matches = regex.find(line)
         if (matches != null && matches.groups.count() == 4 && newException) {
+            MyPanelFactory.textArea?.append("🔥 RUNTIME ERROR...\n")
             newException = false
             val methodName = matches.groups[1]?.value
             val filename = matches.groups[2]?.value
@@ -56,7 +57,6 @@ class MyProcessListener : ProcessAdapter() {
                     """.trimIndent()
 
 
-                    println(jsonToSend)
                     ApplicationManager.getApplication().executeOnPooledThread {
                         try {
                             val url = URL("http://127.0.0.1:8000/predict")
