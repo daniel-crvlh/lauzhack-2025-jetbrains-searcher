@@ -19,6 +19,6 @@ class MyExecutionListener(private val project: Project) : ExecutionListener {
 
     override fun processStarted(executorId: String, env: ExecutionEnvironment, handler: ProcessHandler) {
         println("▶️ Process started: attaching listener")
-        handler.addProcessListener(MyProcessListener())
+        //handler.addProcessListener(MyProcessListener())
     }
 }
