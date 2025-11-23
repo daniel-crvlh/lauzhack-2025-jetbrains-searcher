@@ -27,7 +27,7 @@ class MyProcessListener : ProcessAdapter() {
         val regex = Regex("at [\\w\\d]+\\.([\\w\\d]+)\\(([\\w\\d]+\\.[\\w\\d]+):(\\d+)\\)")
         val matches = regex.find(line)
         if (matches != null && matches.groups.count() == 4 && newException) {
-            MyPanelFactory.textArea?.append("🔥 RUNTIME ERROR...\n")
+            MyPanelFactory.appendText("🔥 RUNTIME ERROR...\n")
             newException = false
             val methodName = matches.groups[1]?.value
             val filename = matches.groups[2]?.value
@@ -80,10 +80,10 @@ class MyProcessListener : ProcessAdapter() {
 
                             // Show popup in UI thread
                             ApplicationManager.getApplication().invokeLater {
-                                MyPanelFactory.textArea?.append("$exceptionMessage\n")
+                                MyPanelFactory.appendText("$exceptionMessage\n")
 
-                                MyPanelFactory.textArea?.append("$explanation\n")
-                                MyPanelFactory.textArea?.append("$code\n\n")
+                                MyPanelFactory.appendText("$explanation\n")
+                                MyPanelFactory.appendText("$code\n\n")
                             }
 
                         } catch (e: Exception) {

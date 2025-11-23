@@ -29,16 +29,16 @@ def predictPost(req: PredictRequest):
     completion = client.chat.completions.create(
     # model="openai/gpt-oss-20b",
     model="Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
-    messages=[{"role":"system", "content":f"You're an expert in {req.language} I need you to read the following code that is in {req.language} only answer with {req.language} code no explanation and fix the {req.function} error"},{"role": "user", "content": f"code:{req.code} --- error: {req.error} "}],
+    messages=[{"role":"system", "content":f"You're an expert in {req.language} I need you to read the following code that is in {req.language} only answer with {req.language} code no explanation and fix the {req.function} error. Format the infos as HTML. The snippet of code should also be formatted in HTML/CSS style."},{"role": "user", "content": f"code:{req.code} --- error: {req.error} "}],
     )
 
     shortDescriptionRes = client.chat.completions.create(
     model="openai/gpt-oss-20b",
-    messages=[{"role":"system", "content":f"You're an expert in {req.language} given the {req.function} error and {req.language} code, explain why the following solution is the best, answer with a short answer at most 1 sentences"},{"role": "user", "content": f"code:{req.code},  error:{req.error}, solution:{completion.choices[0].message.content}"}],
+    messages=[{"role":"system", "content":f"You're an expert in {req.language} given the {req.function} error and {req.language} code, explain why the following solution is the best, answer with a short answer at most 1 sentences. Format the infos as HTML. The snippet of code should also be formatted in HTML/CSS style."},{"role": "user", "content": f"code:{req.code},  error:{req.error}, solution:{completion.choices[0].message.content}"}],
     )
     explanationRes = client.chat.completions.create(
     model="openai/gpt-oss-20b",
-    messages=[{"role":"system", "content":f"You're an expert in {req.language} given the {req.function} error and {req.language} code, explain why the following solution is the best, try to explain shortly, you can extend if necessary"},{"role": "user", "content": f"code:{req.code},  error:{req.error}, solution:{completion.choices[0].message.content}"}],
+    messages=[{"role":"system", "content":f"You're an expert in {req.language} given the {req.function} error and {req.language} code, explain why the following solution is the best, try to explain shortly, you can extend if necessary. Format the infos as HTML. The snippet of code should also be formatted in HTML/CSS style."},{"role": "user", "content": f"code:{req.code},  error:{req.error}, solution:{completion.choices[0].message.content}"}],
     )
 
     return {"code": completion.choices[0].message.content, "explanation": explanationRes.choices[0].message.content, "shortDescription": shortDescriptionRes.choices[0].message.content}

@@ -51,6 +51,7 @@ dependencies {
         testFramework(TestFrameworkType.Platform)
     }
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("org.commonmark:commonmark:0.21.0")
 }
 
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html

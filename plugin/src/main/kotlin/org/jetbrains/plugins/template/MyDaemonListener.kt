@@ -54,7 +54,7 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
 
                 errors.forEach { error ->
                     if (!entries.contains(error)) {
-                        MyPanelFactory.textArea?.append("🔥 SYNTAX ERROR AND LOADING HELP...\n")
+                        MyPanelFactory.appendText("🔥 SYNTAX ERROR AND LOADING HELP...\n")
 
                         ApplicationManager.getApplication().executeOnPooledThread {
                             try {
@@ -99,16 +99,16 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
                                         short_description
                                     )
 
-                                    MyPanelFactory.textArea?.append("Your code has an error : \n")
-                                    MyPanelFactory.textArea?.append("${error.description}\n\n")
+                                    MyPanelFactory.appendText("Your code has an error : \n")
+                                    MyPanelFactory.appendText("${error.description}\n\n")
 
-                                    MyPanelFactory.textArea?.append("Some explanation : \n")
-                                    MyPanelFactory.textArea?.append("$explanation\n\n")
+                                    MyPanelFactory.appendText("Some explanation : \n")
+                                    MyPanelFactory.appendText("$explanation\n\n")
 
-                                    MyPanelFactory.textArea?.append("A snippet of code to help you : \n")
-                                    MyPanelFactory.textArea?.append("$code\n\n")
+                                    MyPanelFactory.appendText("A snippet of code to help you : \n")
+                                    MyPanelFactory.appendText("$code\n\n")
 
-                                    MyPanelFactory.textArea?.append("-----------------------------------\n\n")
+                                    MyPanelFactory.appendText("-----------------------------------\n\n")
                                 }
 
                             } catch (e: Exception) {
