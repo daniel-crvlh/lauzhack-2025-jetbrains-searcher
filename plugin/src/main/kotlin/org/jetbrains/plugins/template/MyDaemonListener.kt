@@ -96,7 +96,7 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
                                 ApplicationManager.getApplication().invokeLater {
                                     showEditorHint(
                                         editor.editor,
-                                        explanation
+                                        short_description
                                     )
 
                                     MyPanelFactory.textArea?.append("Your code has an error : \n")
