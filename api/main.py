@@ -4,11 +4,6 @@ from pydantic import BaseModel
 from together import Together
 import uvicorn
 
-# Install dependencies: pip install fastapi uvicorn
-
-# TOGETHER_API_KEY = "tgp_v1_AG0Kne-Rpt_OEmiCsHtWHENze5YXCeQiZoG2EB6n_pI"
-
-
 app = FastAPI(title="Simple Callable API")
 
 
@@ -27,25 +22,9 @@ class PredictResponse(BaseModel):
 def read_root():
     return {"status": "ok", "message": "API is running"}
 
-# @app.post("/predict", response_model=PredictResponse)
-# def predict(req: PredictRequest):
-#     client = Together()
-
-#     completion = client.chat.completions.create(
-#     model="openai/gpt-oss-20b",
-#     messages=[{"role": "user", "content": "What are the top 3 things to do in New York?"}],
-#     )
-
-#     print(completion.choices[0].message.content)
-
 @app.post("/predict", response_model=PredictResponse)
 def predictPost(req: PredictRequest):
     client = Together()
-
-    clientMessage = ""
-
-    print(req)
-
 
     completion = client.chat.completions.create(
     # model="openai/gpt-oss-20b",
