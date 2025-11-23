@@ -65,7 +65,8 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
 
                                 val response = conn.inputStream.bufferedReader().readText()
 
-                                val responseObj = Json.decodeFromString<ApiResponse.ApiResponse>(response)
+                                val responseObj = Json.decodeFromString<ApiResponse
+                                    .ApiResponse>("{ \"data\": \"DATADATA\" }")
 
                                 val fact = responseObj.data
 
@@ -75,6 +76,10 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
                                         editor.editor,
                                         "🐶 Fun fact: $fact"
                                     )
+
+                                    MyPanelFactory.textArea?.append("${error.description}\n")
+
+                                    MyPanelFactory.textArea?.append("$fact\n\n")
                                 }
 
                             } catch (e: Exception) {
