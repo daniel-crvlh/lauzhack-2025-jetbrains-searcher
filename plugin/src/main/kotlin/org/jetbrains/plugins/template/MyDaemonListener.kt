@@ -54,36 +54,64 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
 
                 errors.forEach { error ->
                     if (!entries.contains(error)) {
-
+                        println("🔥 SYNTAX ERROR AND LOADING HELP...")
                         ApplicationManager.getApplication().executeOnPooledThread {
                             try {
-                                val url = URL("https://dogapi.dog/api/v2/facts?limit=1")
+                                val url = URL(" http://127.0.0.1:8000/predict")
                                 val conn = url.openConnection() as HttpURLConnection
-                                conn.requestMethod = "GET"
+                                conn.requestMethod = "POST"
+                                conn.setRequestProperty("Content-Type", "application/json; utf-8")
+                                conn.setRequestProperty("Accept", "application/json")
                                 conn.connectTimeout = 3000
                                 conn.readTimeout = 3000
+                                conn.doOutput = true // Important for POST
+
+                                var error_api = error.description
+
+                                val jsonBody: String = "{\n" +
+                                        "\"error\":\"$error_api\",\n" +
+                                        "\"code\":\"if true == true return true\",\n" +
+                                        "\"lineNb\":12,\n" +
+                                        "\"function\":\"syntax\",\n" +
+                                        "\"language\":\"java\"\n" +
+                                        "}"
+
+                                // Write body
+                                conn.outputStream.use { os ->
+                                    val input = jsonBody.toByteArray(Charsets.UTF_8)
+                                    os.write(input, 0, input.size)
+                                }
 
                                 val response = conn.inputStream.bufferedReader().readText()
+                                println(response)
 
                                 val responseObj = Json.decodeFromString<ApiResponse
-                                    .ApiResponse>("{ \"data\": \"DATADATA\" }")
+                                    .ApiResponse>(response)
 
-                                val fact = responseObj.data
+                                val code = responseObj.code
+                                val explanation = responseObj.explanation
 
                                 // Show popup in UI thread
                                 ApplicationManager.getApplication().invokeLater {
                                     showEditorHint(
                                         editor.editor,
-                                        "🐶 Fun fact: $fact"
+                                        explanation
                                     )
 
-                                    MyPanelFactory.textArea?.append("${error.description}\n")
+                                    MyPanelFactory.textArea?.append("Your code has an error : \n")
+                                    MyPanelFactory.textArea?.append("${error.description}\n\n")
 
-                                    MyPanelFactory.textArea?.append("$fact\n\n")
+                                    MyPanelFactory.textArea?.append("Some explanation : \n")
+                                    MyPanelFactory.textArea?.append("$explanation\n\n")
+
+                                    MyPanelFactory.textArea?.append("A snippet of code to help you : \n")
+                                    MyPanelFactory.textArea?.append("$code\n\n")
+
+                                    MyPanelFactory.textArea?.append("-----------------------------------")
                                 }
 
                             } catch (e: Exception) {
-                                println("❌ Failed to fetch dog fact: ${e.message}")
+                                println("❌ Failed to fetch data : ${e.message}")
                             }
                         }
 

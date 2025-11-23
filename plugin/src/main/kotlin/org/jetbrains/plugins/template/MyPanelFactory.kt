@@ -26,7 +26,7 @@ class MyPanelFactory : ToolWindowFactory {
         // Create text area
         textArea = JTextArea()
         textArea!!.isEditable = false
-        textArea!!.text = "Initial text in panel.\n"
+        textArea!!.text = "\n"
 
         // Optional: make it scrollable and fill the panel
         val scrollPane = JBScrollPane(textArea)

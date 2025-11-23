@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 class ApiResponse {
     @Serializable
     data class ApiResponse(
-        val data: String,
+        val code: String,
+        val explanation: String
     )
 }

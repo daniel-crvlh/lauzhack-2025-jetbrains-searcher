@@ -13,7 +13,7 @@
         <postStartupActivity implementation="org.jetbrains.plugins.template.startup.MyProjectActivity" />
 
         <toolWindow
-                id="MyPanel"
+                id="ExceptionalAssistant"
                 anchor="right"
                 icon="/icons/ExceptionalAssistantLogo.png"
                 factoryClass="org.jetbrains.plugins.template.MyPanelFactory"
