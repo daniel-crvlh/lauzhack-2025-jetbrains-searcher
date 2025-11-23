@@ -63,8 +63,8 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
                                 conn.requestMethod = "POST"
                                 conn.setRequestProperty("Content-Type", "application/json; utf-8")
                                 conn.setRequestProperty("Accept", "application/json")
-                                conn.connectTimeout = 10000
-                                conn.readTimeout = 10000
+                                conn.connectTimeout = 20000
+                                conn.readTimeout = 20000
                                 conn.doOutput = true // Important for POST
 
                                 var error_api = error.description
@@ -74,7 +74,7 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
                                         "\"code\": \"\",\n" +
                                         "\"lineNb\":12,\n" +
                                         "\"function\":\"syntax\",\n" +
-                                        "\"language\":\"java\"\n" +
+                                        "\"language\":\"kotlin\"\n" +
                                         "}"
 
                                 // Write body

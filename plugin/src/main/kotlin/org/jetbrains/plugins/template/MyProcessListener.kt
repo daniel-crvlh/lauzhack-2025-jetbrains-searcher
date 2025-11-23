@@ -47,7 +47,7 @@ class MyProcessListener : ProcessAdapter() {
 
                     val jsonToSend = """
                     {
-                        "error":"${exceptionMessage.replace("\"", "\\\"")}",
+                        "error":"${exceptionMessage.replace("\"", "\\\"").replace("\n", "")}",
                         "code":"$fileContents",
                         "lineNb":$lineNumber,
                         "function":"$methodName",
@@ -55,6 +55,8 @@ class MyProcessListener : ProcessAdapter() {
                     }
                     """.trimIndent()
 
+
+                    println(jsonToSend)
                     ApplicationManager.getApplication().executeOnPooledThread {
                         try {
                             val url = URL("http://127.0.0.1:8000/predict")
@@ -85,7 +87,7 @@ class MyProcessListener : ProcessAdapter() {
                             }
 
                         } catch (e: Exception) {
-                            println("❌ Failed to fetch dog fact: ${e.message}")
+                            println("❌ Failed to fetch: ${e.message}")
                         }
                     }
                 }
