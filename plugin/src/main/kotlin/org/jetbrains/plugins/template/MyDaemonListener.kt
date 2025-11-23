@@ -54,7 +54,8 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
 
                 errors.forEach { error ->
                     if (!entries.contains(error)) {
-                        println("🔥 SYNTAX ERROR AND LOADING HELP...")
+                        MyPanelFactory.textArea?.append("🔥 SYNTAX ERROR AND LOADING HELP...\n")
+
                         ApplicationManager.getApplication().executeOnPooledThread {
                             try {
                                 val url = URL(" http://127.0.0.1:8000/predict")
@@ -62,15 +63,15 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
                                 conn.requestMethod = "POST"
                                 conn.setRequestProperty("Content-Type", "application/json; utf-8")
                                 conn.setRequestProperty("Accept", "application/json")
-                                conn.connectTimeout = 3000
-                                conn.readTimeout = 3000
+                                conn.connectTimeout = 10000
+                                conn.readTimeout = 10000
                                 conn.doOutput = true // Important for POST
 
                                 var error_api = error.description
 
                                 val jsonBody: String = "{\n" +
                                         "\"error\":\"$error_api\",\n" +
-                                        "\"code\":\"if true == true return true\",\n" +
+                                        "\"code\": \"\",\n" +
                                         "\"lineNb\":12,\n" +
                                         "\"function\":\"syntax\",\n" +
                                         "\"language\":\"java\"\n" +
@@ -83,13 +84,13 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
                                 }
 
                                 val response = conn.inputStream.bufferedReader().readText()
-                                println(response)
 
                                 val responseObj = Json.decodeFromString<ApiResponse
                                     .ApiResponse>(response)
 
                                 val code = responseObj.code
                                 val explanation = responseObj.explanation
+                                val short_description = responseObj.shortDescription
 
                                 // Show popup in UI thread
                                 ApplicationManager.getApplication().invokeLater {
@@ -107,7 +108,7 @@ class MyDaemonListener(private val project: Project) : DaemonCodeAnalyzer.Daemon
                                     MyPanelFactory.textArea?.append("A snippet of code to help you : \n")
                                     MyPanelFactory.textArea?.append("$code\n\n")
 
-                                    MyPanelFactory.textArea?.append("-----------------------------------")
+                                    MyPanelFactory.textArea?.append("-----------------------------------\n\n")
                                 }
 
                             } catch (e: Exception) {

@@ -6,6 +6,7 @@ class ApiResponse {
     @Serializable
     data class ApiResponse(
         val code: String,
-        val explanation: String
+        val explanation: String,
+        val shortDescription: String
     )
 }
