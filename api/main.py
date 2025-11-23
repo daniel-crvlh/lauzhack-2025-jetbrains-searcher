@@ -16,7 +16,8 @@ class PredictRequest(BaseModel):
 
 
 class PredictResponse(BaseModel):
-    data: str
+    code: str
+    explanation : str
 
 @app.get("/")
 def read_root():
@@ -31,7 +32,7 @@ def predictPost(req: PredictRequest):
     model="Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
     messages=[{"role":"system", f"content":"You're an expert in {req.language} I need you to {req.fuction} the following code that is in {req.language} only answer with {req.language} code no explanation"},{"role": "user", "content": f"{req.code} "}],
     )
-    return {"data": completion.choices[0].message.content}
+    return {"code": completion.choices[0].message.content, "explanation": ""}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info", reload=True)
